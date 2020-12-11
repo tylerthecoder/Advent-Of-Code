@@ -18,27 +18,32 @@ void readData() {
   }
 }
 
-int countJolts() {
+long countJolts() {
   sort(jolts.begin(), jolts.end()); 
 
   // Add my devices
   jolts.push_back(jolts.back() + 3);
 
-  int numOf3Diff = 0;
-  int numOf1Diff = 0;
-  for (int i = 1; i < jolts.size(); i++) {
-    cout << jolts[i] << endl;
-    int diff = jolts[i] - jolts[i-1];
-    if (diff == 1) numOf1Diff++;
-    if (diff == 3) numOf3Diff++;
+  vector<long> comboCount(jolts.size());
+  
+  comboCount[jolts.size() - 1] = 1;
+
+  for (int i = jolts.size()-2; i >= 0; i--) {
+    long comboNumber = 0;      
+    int reach = i+1;
+    while (reach < jolts.size() && jolts[reach] - jolts[i] <= 3) {
+      comboNumber += comboCount[reach]; 
+      reach++;
+    }
+    comboCount[i] = comboNumber;
   }
 
-  return numOf1Diff * numOf3Diff;
+  return comboCount[0];
 }
 
 int main() {
   readData();
-  int res = countJolts();
-  cout << res << endl;
+  long res = countJolts();
+  cout << "Result: " << res << endl;
 }
 
