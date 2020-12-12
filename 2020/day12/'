@@ -1,0 +1,63 @@
+#include <fstream>
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+struct MoveData {
+  char action;
+  int amount;
+};
+
+vector<MoveData> moves;
+
+void readData() {
+  fstream file;
+  file.open("data.txt", ios::in);
+  if (!file) return;
+
+  MoveData move;
+  while (file >> move.action >> move.amount) {
+    moves.push_back(move);  
+  }
+}
+
+int moveShip() {
+  int north = 0;
+  int east = 0;
+  // 0: East, 1: South, 2: West, 3: North
+  int facing = 0;
+  for (const MoveData move: moves) {
+    switch (move.action) {
+      case 'N':
+        north += move.amount;
+      case 'S':
+        north -= move.amount;
+      case 'E':
+        east += move.amount;
+      case 'W':
+        east -= move.amount; 
+      case 'R':
+        facing = (facing + move.amount / 90) % 4;
+      case 'L':
+        facing = ((facing+4) - move.amount / 90) % 4;
+      case 'F':
+        if (facing == 0) east += move.amount;
+        else if (facing == 1) north -= move.amount;
+        else if (facing == 2) east -= move.amount;
+        else if (facing == 3) north += move.amount;
+        else cout << "BAD" << endl;
+    }
+  }
+
+  return abs(north) + abs(east);
+}
+
+
+
+int main() {
+  readData();    
+  int res = moveShip();
+  cout << "Result: " << res << endl;
+}
+
