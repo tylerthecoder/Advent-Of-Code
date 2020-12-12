@@ -67,8 +67,6 @@ int doAllSeats() {
     numChanged = doSeats();
   } while(numChanged > 0);
 
-  cout << "";
-
   int numOfTakenSeats = 0;
   for (const string row : seats) {
     for (const char seat : row) {
